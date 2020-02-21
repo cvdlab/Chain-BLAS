@@ -1,0 +1,10 @@
+\section{Conclusion}\label{conclusion}
+%=====================================
+
+In this paper we have summarized the main points of our approach to geometric and solid computing with basic computational topology using sparse matrices, and have discussed the current implementatation of some related  matrix operations with SuiteSparse:GraphBLAS in Julia.  
+
+In particular, we have shown (a)~the construction of matrix  representation of cellular complexes, (b)~the building of graded boundary and coboundary matrices, to efficiently navigate within a cellular complex (c)~the setup of maps between chain spaces, that are equivalent to database queries on boundary elements of a solid representation. 
+
+Currently we are implementing with GraphBLAS our algorithmic pipeline to both generate a space arrangement and/or evaluate any expressions of solid algebras. We are currently starting to evaluate the efficiency of this approach with large-scale cellular and simplicial complexes, like the ones used for CAD of very complex engineering objects and assemblies. Experiments with complex biological structures are also being developed. 
+
+We strongly believe that our use of sparse-matrix-based topology  might probably be combined with tensor-based neural networks, in order to move beyond image understanding and towards full reconstruction of built environments and complex scenes, starting from multiple images.

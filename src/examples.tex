@@ -1,0 +1,72 @@
+\section{Simple examples}\label{examples}
+%=====================================
+
+Without loss of generality, let us start with the B-rep of a unit cube (see Figure~\ref{}a) whith topology given by two arrays of arrays \texttt{EV} and \texttt{FV} providing indices of vertices \texttt{V} on boundary of edges \texttt{E} or faces \texttt{F}.
+{\small\begin{verbatim}
+EV = [[1,2],[3,4],[5,6],[7,8],[1,3],[2,4],[5,7],[6,8],[1,5],[2,6],[3,7],[4,8]]
+FV = [[1,2,3,4],[5,6,7,8],[1,2,5,6],[3,4,7,8],[1,3,5,7],[2,4,6,8]]
+\end{verbatim}}
+The $[\partial_1]$ matrix is ready to compute from \texttt{EV}:
+{\small\begin{lstlisting}
+n = length(EV);
+Is,Js,Vs = map(cat,[EV, [[i,i] for i=1:n], [[1,1] for i=1:n]]);
+$\partial_1$ = sparse(Is,Js,Vs);
+\end{lstlisting}}
+{\small\begin{lstlisting}
+Matrix(convert(SparseMatrixCSC{Int8,Int64}, $\partial_1$))
+8x12 Array{Int8,2}:
+ 1  0  0  0  1  0  0  0  1  0  0  0
+ 1  0  0  0  0  1  0  0  0  1  0  0
+ 0  1  0  0  1  0  0  0  0  0  1  0
+ 0  1  0  0  0  1  0  0  0  0  0  1
+ 0  0  1  0  0  0  1  0  1  0  0  0
+ 0  0  1  0  0  0  0  1  0  1  0  0
+ 0  0  0  1  0  0  1  0  0  0  1  0
+ 0  0  0  1  0  0  0  1  0  0  0  1
+\end{lstlisting}}
+
+The $\partial_2$ matrix is computed by filtering the elements from the product $[\partial_1^\top] * \texttt{fv'}$, where the sparse matrix \texttt{fv} is generated from \texttt{FV} array.
+
+{\small\begin{lstlisting}
+m = length(FV);
+Is,Js,Vs = map(cat,[[[i for k=1:length(f)] for (i,f) in enumerate(FV)], 
+    [FV[i] for i=1:m], [ones(Int8, length(FV[i])) for i=1:m]]);
+fv = sparse(Is,Js,Vs);
+Matrix(convert(SparseMatrixCSC{Int8,Int64}, fv))
+6x8 Array{Int8,2}:
+ 1  1  1  1  0  0  0  0
+ 0  0  0  0  1  1  1  1
+ 1  1  0  0  1  1  0  0
+ 0  0  1  1  0  0  1  1
+ 1  0  1  0  1  0  1  0
+ 0  1  0  1  0  1  0  1
+\end{lstlisting}}
+
+{\small\begin{lstlisting}
+triples = map(tuple,SparseArrays.findnz($\partial_1$' * fv')...);
+mat3xm = hcat([ [i,j,1] for (i,j,v) in triples if v==2]...);
+Is,Js,Vs = [mat3xm[1,:], mat3xm[2,:], convert(Array{Int8,1},mat3xm[3,:])];
+$\partial_2$ = sparse(Is,Js,Vs)
+Matrix($\partial_2$)
+12x6 Array{Int64,2}:
+ 1  0  1  0  0  0
+ 1  0  0  1  0  0
+ 0  1  1  0  0  0
+ 0  1  0  1  0  0
+ 1  0  0  0  1  0
+ 1  0  0  0  0  1
+ 0  1  0  0  1  0
+ 0  1  0  0  0  1
+ 0  0  1  0  1  0
+ 0  0  1  0  0  1
+ 0  0  0  1  1  0
+ 0  0  0  1  0  1
+\end{lstlisting}}
+
+
+VV = [[k] for k=1:size(V,2)]
+model = (V, [VV,EV,FV])::Lar.LARmodel
+
+meshes = GL.numbering(1.5)(model, GL.COLORS[1], 0.1)
+%#push!(meshes, GL.GLFrame)
+GL.VIEW(meshes);

@@ -1,0 +1,121 @@
+\section{Chain Adjacency and Incidence}
+\label{chain-adjacencies-and-incidensies}
+%=========================================
+
+Boundary decompositions (B-reps) are the typical representations used in solid modeling and computer graphcs. The model boundary is partitioned into vertices (\texttt{V}: 0-cells), edges (\texttt{E}: 1-cells), and faces (\texttt{F}: 2-cells), where faces are often triangles or more general convex cells. 
+
+\subsection{Boundary representation of solid models}
+\label{boundary-representation-of-solid-models}
+%--------------------------------------------------
+
+
+In particular, a typical solid modeling representation employs some specialized data structure to efficiently traverse the boundary, moving from some element to the adjacent ones (with same dimension) or to incident ones (with different dimension). Several data structures have been used for this purpose~\cite{HofShapiro:2017}, taking into account both the efficiency of topological queries and the storage compactness. Three binary adjacency relations and six binary incidence relations can be needed by algorithms, as shown in Table~\ref{tab:relations}a.
+
+Using chain operators, or better their matrices, when an ordering of elements has been fixed inside the sets \texttt{V}, \texttt{E}, and \texttt{F} using one-dimensional arrays, such binary relations can be represented and/or computed as shown in Table~\ref{tab:relations}b. It is easy to show (see Table~\ref{tab:relations}b), that all linear operators between chain spaces corresponding to binary relations between boundary elements can  be derived from $\partial_1$ and $\partial_2$ via matrix transposition or product over semirings~\cite{DBLP:journals/corr/KepnerABBFGHKLM16,GraphBLAS:API:2017}.
+
+\begin{table}[htp]
+\caption{(a) The 9 binary relations between boundary elements, and the 16 binary relations between decompositive elements; (b) corresponding linear operators between chain spaces. Remember that $\partial_p: C_p\to C_{p-1}$ and that $\delta_p = \partial_{p+1}^\top$. }
+\begin{center}
+\begin{tabular}{|c|ccc|c|}
+\hline
+ &\texttt{V} & \texttt{E} & \texttt{F} & \texttt{C} \\ 
+\hline
+\texttt{V} &\texttt{VV} & \texttt{VE} & \texttt{VF} & \texttt{VC} \\ 
+\texttt{E} &\texttt{EV} & \texttt{EE} & \texttt{EF} & \texttt{EC} \\ 
+\texttt{F} &\texttt{FV} & \texttt{FE} & \texttt{FF} & \texttt{FC} \\ 
+\hline
+\texttt{C} &\texttt{CV} & \texttt{CE} & \texttt{CF} & \texttt{CC} \\ 
+\hline
+\end{tabular}
+$\qquad$
+\begin{tabular}{|c|ccc|c|}
+\hline
+ &\texttt{$C_0$} & \texttt{$C_1$} & \texttt{$C_2$} & \texttt{$C_3$} \\ 
+\hline
+\texttt{$C_0$} & $[\partial_1][\delta_0]$ & $[\partial_1]$ & $[\partial_1][\partial_2]$ & $[\partial_1][\partial_2][\partial_3]$\\ 
+\texttt{$C_1$} & $[\delta_0]$  & $[\delta_0][\partial_1]$ & $[\partial_2]$ & $[\partial_2][\partial_3]$ \\ 
+\texttt{$C_2$} & $[\delta_1][\delta_0]$ & $[\delta_1]$ & $[\delta_1][\partial_2]$ & $[\partial_3]$ \\ 
+\hline
+\texttt{$C_3$} & $[\delta_2][\delta_1][\delta_0]$ & $[\delta_2][\delta_1]$ & $[\delta_2]$ & $[\delta_2][\partial_3]$ \\ 
+\hline
+\end{tabular}
+\end{center}
+\label{tab:relations}
+\end{table}%
+
+
+Note that we have assumed vectors as column matrices, so that an operator maps the column space to the row space of its matrix. Hence, in order to maintain the consistency between the two representations  we should read the relation $\texttt{AB} \subset \texttt{A}\times \texttt{B}$ as a map $\texttt{AB}: \texttt{B} \to \texttt{A}$.
+
+
+\subsection{Space Decompositions}\label{space-decompositions}
+%-------------------------------------------------------------
+A similar representation scheme---called \emph{decompositive} by~\cite{Requicha:1980:RRS:356827.356833}---is also  used, both in solid modeling and in order to represent the domain decomposition in FEM and other discretizations of physical models. In this case a partition of the whole domain is provided, using cellular 3-complexes, given by \texttt{V}, \texttt{E}, \texttt{F}, and \texttt{C} sets of $0$-, 1-, 2- and 3-cells, where often the \texttt{C} elements  are either tetrahedra or hexahedra.  
+
+For the topology of a graph (cellular 1-complex) just $C_0$ (vertices) and $C_1$ (edges) are needed, so that a complete representation is given by the signed or unsigned matrix $[\partial_1]$, corresponding to the relation $\texttt{EV} \equiv C_1\to C_0$.
+
+It is worth noting that operators $\partial_1$, $\partial_2$, and $\partial_3$ are sufficient to represent the complete collection of $4\times 4$ operators (see Table~\ref{tab:relations}b), via matrix transposition or product over semirings. In other words, the \emph{chain complex} $C_\bullet = (C_p, \partial_p)$ of boundary matrices, $1\leq p\leq 1,2,3$ is a \emph{complete representation} of the topology of (a) graphs, (b) B-reps, and (c) decompositive representations, respectively. 
+
+Cellular complexes may be either \emph{oriented} (signed) or \emph{non-oriented} (unsigned). In the first case the elements of operator matrices are taken over the domain $D=\{0,1\}$; in the second case they belong to the domain $D=\{-1,0,1\}$, so that passing from a coefficient $+1$ to a coefficient $-1$ (or viceversa) the element orientation is reversed.
+
+
+\subsection{Minimal representations}\label{minimal-reps}
+
+Most of earlier algorithms and procedures~\cite{
+4055948,
+Ala:1992:PAB:616022.617736,
+Baumgart:1972:WEP:891970,
+bowyer1995introducing,
+bowyer1995svlis,
+Braid:1975:SSB:360715.360727,
+Brisson:1989:RGS:73833.73858,
+cadanda,
+Dobkin:1987:PMT:41958.41967,
+Gomes:1999:MMB:304012.304039,
+Guibas:1985:PMG:282918.282923,
+HoffmannK01,
+ieee-tase,
+Kalay:1989:HET:63718.63719,
+Lee:2001:PES:376957.376976,
+Lienhardt:1991:TMB:115604.115610,
+Mantyla:1988:ISM:60949,
+Paoluzzi:1989:BAO:70248.70249,
+Paoluzzi:1993:DMS:169728.169719,
+Paoluzzi:1995:GPP:212332.212349,
+Pascucci:1995:DCB:218013.218055,
+Pratt94ashape,
+Raghothama:1999:CUD:304012.304019,
+Rap97,
+Requicha:1980:RRS:356827.356833,
+RequichaVoelcker:77,
+Rossignac:1991:CNG:115604.115606,
+Rossignac:SGC:90,
+Shapiro:1991:RSS:124951,
+Shapiro:1995:PFS:218013.218029,
+Silva:81,
+Weiler:86,
+Weiler:88,
+Woo:85,
+wozny1990geometric,
+Yamaguchi:85,
+yamaguchi1995ntb,
+Zhou:2016:MAS:2897824.2925901,
+bieri:95,
+Rossignac:89,
+Hoffmann:91,
+Hoffmann:1989:GSM:74803,
+Hoffmann:1987:RSO:866286} 
+work with data
+structures optimized for selected classes of geometric
+objects. By contrast, our formulation, representation, and algorithms, cast in
+terms of (co)chain complexes of (co)boundary maps, may be
+applied to very different geometric objects, ranging from solid models
+to engineering meshes, geographical systems, biomedical images.
+
+Given a set $S=\{s_j\}$, the \emph{characteristic function} $\chi_A: S\to\{0,1\}$ takes value 1 for all elements of $A\subseteq S$ and 0 at all elements of $S$ not in $A$. 
+We call \emph{characteristic matrix} $M$ of a collection of subsets $A_i\subseteq S$ ($i=1,\ldots,n$) the binary  matrix $M=(m_{ij})$, with $m_{ij} = \chi_{A_i}(s_j)$. {A  matrix $M_p$, whose rows are indexed by unit $p$-chains and columns are indexed by unit $0$-chains, provides a useful representation of a basis for the linear space $C_p$. Permuting (reindexing) either rows or columns provides a different basis.}   While chains are mostly presented as formal sums of cells, in the actual implementation their signed coordinate vectors are used as \emph{sparse} arrays, and in particular as CSC (Compressed Sparse Column) maps : $\N\to\{-1,0,1\}$.
+
+It is possible to show~\cite{} that, when the $d$-cells are convex, the topology of a cellular $d$-complex is fully described by $M_{d-1}$ and by an embedding function $\mu: \texttt{V}\to \E^d$. When $d$-cells are more complex---say, non-convex or with holes---the triple $(M_{d-1}, M_{d-2}, \mu)$ is needed to get a full knowledge of the topology of the complex.
+
+We call \texttt{LAR} (Linear Algebraic Representation) of subsets of a set \texttt{V} (vertices), the array, indexed by ordinals (one-to-one with subsets), of arrays of indices to \texttt{V} elements. This one is a compact representation of the \emph{characteristic matrix} of the collection of subsets.
+
+
