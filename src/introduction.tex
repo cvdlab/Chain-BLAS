@@ -29,12 +29,12 @@ C_3 \
 }
 \ C_0 .
 \] 
-Let us to remark preliminary that when $p\in \{0,1\}$, a chain complex is a representation of a \emph{graph}, with $[\partial_1]$ the \emph{incidence matrix} between 1-cells (edges) in $C_1$ and 0-cells (vertices) in $C_0$. Also, the multiplication $[\partial_1][\delta_0]=[\partial_1][\partial_1]^t$ gives the \emph{adjacency} matrix of the graph, while the diagonal entries provide the degrees of vertices, defined by the number of incident edges on each vertex. The \emph{GraphBLAS} standard~\cite{GraphBLAS:standard} provides a small set of matrix primitives to compute graph properties that, combined together, allow for easy implementation of fast algorithms on large graphs.
+Let us to remark preliminary that when $p\in \{0,1\}$, a chain complex is a representation of a \emph{graph}, with $[\partial_1]$ the \emph{incidence matrix} between 1-chains (edges) in $C_1$ and 0-chains (vertices) in $C_0$. Also, the multiplication $[\partial_1][\delta_0]=[\partial_1][\partial_1]^t$ gives the \emph{adjacency} matrix of the graph, while the diagonal entries provide the degrees of vertices, defined by the number of incident edges on each vertex. The \emph{GraphBLAS} standard~\cite{GraphBLAS:standard} provides a small set of matrix primitives to compute graph properties that, combined together, allow for easy implementation of fast algorithms on large graphs.
 
-In several areas of geometric and topological computing---including
-geo-mapping, building information modeling, medical imaging, CAD and
+In several application of computational geometry and topology---including
+geo-mapping, building information modeling (BIM), medical imaging, CAD and
 solid modeling, virtual and augmented reality, finite element modeling
-and simulation, etc.---the amount and detail of 2D and/or 3D data
+and simulation (FEM, FEA), etc.---the amount and detail of 2D and/or 3D data
 continue to grow. Analogously, the need for an unified approach to
 graph algorithms and for unified and simplified interfaces, has been
 well intercepted by the GraphBLAS initiative and the related GraphBLAS
