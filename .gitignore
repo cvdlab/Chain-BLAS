@@ -191,7 +191,7 @@ _minted*
 *.sympy
 sympy-plots-for-*.tex/
 
-# pdfcomment
+	# pdfcomment
 *.upa
 *.upb
 
@@ -275,3 +275,6 @@ TSWLatexianTemp*
 
 # Makeindex log files
 *.lpz
+main.pdf
+.DS_Store
+
